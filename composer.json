@@ -17,7 +17,7 @@
     ],
     "require": {
         "php": "^5.3.3 || ^7.0",
-        "interswitch/interswitch": "@dev"
+        "interswitch/interswitch": "dev-master"
     },
     "autoload": {
         "psr-4": {"Paycode\\": "src/"}
