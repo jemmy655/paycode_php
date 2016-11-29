@@ -4,6 +4,7 @@
  *
  * @author Lekan.Omotayo
  */
+namespace Interswitch;
 
 require_once __DIR__.'/lib/Interswitch.php';
 
