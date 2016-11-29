@@ -1,0 +1,24 @@
+{
+    "name": "interswitch/paycde",
+    "type": "library",
+    "description": "An Interswitch Paycode SDK.",
+    "license": "ISC",
+    "authors": [
+      {
+	"name": "Lekan Omotayo",
+	"email": "developer@interswitchgroup.com"	
+      }
+    ],
+    "repositories": [
+      {
+        "type": "vcs",
+        "url": "https://github.com/techquest/paycode_php"
+      }
+    ],
+    "require": {
+        "php": "^5.3.3 || ^7.0"
+    },
+    "autoload": {
+        "psr-4": {"Paycode\\": "src/"}
+    }
+}
