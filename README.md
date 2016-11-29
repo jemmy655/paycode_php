@@ -15,7 +15,8 @@ $ composer require Interswitch\Paycode
 ```php
 <?php
 
-use Interswitch\Paycode;
+require_once __DIR__.'/vendor/autoload.php';
+use Interswitch\Paycode as Paycode;
 
 // Initialize Interswitch object
 $CLIENT_ID = "IKIA9614B82064D632E9B6418DF358A6A4AEA84D7218";
