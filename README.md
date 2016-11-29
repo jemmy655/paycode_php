@@ -7,7 +7,7 @@ Interswitch Paycode PHP Library
 Install the latest version with
 
 ```bash
-$ composer require Paycode
+$ composer require Interswitch\Paycode
 ```
 
 ## Basic Usage
@@ -15,7 +15,7 @@ $ composer require Paycode
 ```php
 <?php
 
-use \Paycode;
+use Interswitch\Paycode;
 
 // Initialize Interswitch object
 $CLIENT_ID = "IKIA9614B82064D632E9B6418DF358A6A4AEA84D7218";
