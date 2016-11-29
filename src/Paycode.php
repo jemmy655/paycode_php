@@ -4,13 +4,14 @@
  *
  * @author Lekan.Omotayo
  */
+
 namespace Interswitch;
 
 require_once __DIR__.'/lib/Interswitch.php';
 
 if(!class_exists("JWT"))
 {
-  require_once __DIR__.'/lib/lib/JWT.php';
+  require_once __DIR__.'/lib/JWT.php';
 }
 
 use Interswitch\Interswitch as Interswitch;
@@ -89,7 +90,7 @@ function generateWithEWallet($accessToken, $paymentMethodIdentifier, $expDate, $
 }
 
 static function Randomize() {
-    return mt_rand(0, 999);
+    return mt_rand(0, 999);    
 }
 
 }
