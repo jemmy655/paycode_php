@@ -13,11 +13,10 @@ namespace Interswitch;
 include_once __DIR__.'/lib/Utils.php';
 include_once __DIR__.'/lib/Constants.php';
 include_once __DIR__.'/lib/HttpClient.php';
-include_once __DIR__.'/lib/Crypt/RSA.php';
-include_once __DIR__.'/lib/Math/BigInteger.php';
-
-use \Crypt_RSA;
-use \Math_BigInteger;
+//include_once __DIR__.'/lib/Crypt/RSA.php';
+//include_once __DIR__.'/lib/Math/BigInteger.php';
+//use \Crypt_RSA;
+//use \Math_BigInteger;
 
 class Interswitch {
 
@@ -128,19 +127,35 @@ function sendWithAccessToken($uri, $httpMethod, $accessToken, $data = null, $hea
   $this->signature = Utils::generateSignature($this->clientId, $this->clientSecret, $uri, $httpMethod, $this->timestamp, $this->nonce, $signedParameters);
 
   $authorization = 'Bearer ' . $accessToken;
+
   $constantHeaders = [
-   'Content-Type: ' . Constants::CONTENT_TYPE,
-   'Authorization: ' . $authorization,
-   'SignatureMethod: ' . $this->signatureMethod,
-   'Signature: ' . $this->signature,
-   'Timestamp: ' . $this->timestamp,
-   'Nonce: ' . $this->nonce
+    'Authorization: ' . $authorization,
+    'SignatureMethod: ' . $this->signatureMethod,
+    'Signature: ' . $this->signature,
+    'Timestamp: ' . $this->timestamp,
+    'Nonce: ' . $this->nonce
   ];
 
+  $contentType = [
+    'Content-Type: '. Constants::CONTENT_TYPE
+  ];
+
+  if($httpMethod != 'GET')
+  {
+    $constantHeaders = array_merge($contentType, $constantHeaders);
+  }
+
+  //echo "<br>Headers 2: ";
+  //print_r($headers);
   if($headers !== null && is_array($headers)) {
+   //echo "<br> Headers is not null: " . $headers;
    $requestHeaders = array_merge($headers, $constantHeaders);
+   //echo "<br> New merged Headers: " ;
+   //print_r($requestHeaders);
    $response = HttpClient::send($requestHeaders, $httpMethod, $uri, $data);
-  } else {
+  }
+  else {
+   //echo "<br>Headers is null";  
    $response = HttpClient::send($constantHeaders, $httpMethod, $uri, $data);
   }
 
@@ -152,6 +167,7 @@ function sendWithAccessToken($uri, $httpMethod, $accessToken, $data = null, $hea
 
 function getAuthData($pan, $expDate, $cvv, $pin, $publicModulus = null, $publicExponent = null) {
 
+  /*
   if(is_null($publicModulus))
   {
     $publicModulus = Constants::PUBLICKEY_MODULUS;
@@ -180,38 +196,44 @@ function getAuthData($pan, $expDate, $cvv, $pin, $publicModulus = null, $publicE
 
   openssl_public_encrypt($authDataCipher, $encryptedData, $pub_key);
   $authData = base64_encode($encryptedData);
+   */
+ 
+  $authData = Utils::getAuthData($pan, $expDate, $cvv, $pin, $publicModulus, $publicExponent);
 
   return $authData;
 }
 
-function getSecureData($publicCertPath, $pan, $expDate, $cvv, $pin) 
+
+
+function getSecureData($pan, $expDate, $cvv, $pin, $amt, $msisdn, $ttid) 
 {
-  $secureData["SECURE"] = Constants::API_JAM_SECURE_DATA;
-  $secureData["PINBLOCK"] = Constants::API_JAM_SECURE_DATA;
+  //echo "<br>Pin: " . $pin;
+  //echo "<br>CVV: " . $cvv;
+  //echo "<br>Exp Date: " . $expDate;
  
- return $secureData;
+  $options = array(
+    'expiry' => $expDate,
+    'pan' => $pan,
+    'ttId' => $ttid,
+    'amount' => $amt,
+    'mobile' => $msisdn   
+  );
+
+  $pinData = array(
+    'pin' => $pin,
+    'cvv' => $cvv,
+    'expiry' => $expDate
+  );
+
+ $secure = Utils::generateSecureData($options, $pinData);
+
+ //echo "<br>Secure Data: " . $secure['secureData'];
+ //echo "<br>Pin Block: " . $secure['pinBlock'];
+ //echo "<br>Mac: " . $secure['mac'];
+ 
+ return $secure;
 }
 
-
-/*  
-  function getAuthData($publicCertPath = null, $version, $pan, $expDate, $cvv, $pin) {
-        $authDataCipher = $version . 'Z' . $pan . 'Z' . $pin . 'Z' . $expDate . 'Z' . $cvv;
-
-        if ($publicCertPath == null) {
-            $publicCertPath = '..\paymentgateway.crt';
-        }
-
-        $fp = fopen($publicCertPath, "r");
-        $pub_key = fread($fp, 8192);
-        fclose($fp);
-
-        openssl_public_encrypt($authDataCipher, $encryptedData, $pub_key);
-
-        $authData = base64_encode($encryptedData);
-
-        return $authData;
-    }
-*/
 
 
 
