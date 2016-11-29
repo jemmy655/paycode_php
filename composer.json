@@ -1,5 +1,5 @@
 {
-    "name": "interswitch/paycde",
+    "name": "interswitch/paycode",
     "type": "library",
     "description": "An Interswitch Paycode SDK.",
     "license": "ISC",
